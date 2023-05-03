@@ -1,10 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_utils.cbv import cbv
-from sqlalchemy.orm import Session
-from crud import get_all_users, create_user, get_user_info_by_id, update_user_info, delete_user_info
-from database import get_db
+from crud import get_all_users, get_all_songs, get_all_artists, get_all_ganres, get_all_interactions, get_user_song_list_by_id
+from database import session
 from exceptions import UserInfoException
-from schema import User, CreateAndUpdateUser, PaginatedUserInfo
+from schema import PaginatedSongInfo, PaginatedUserInfo, PaginatedArtistInfo, PaginatedGanreInfo, PaginatedInteractionInfo
+
+import logging
+
+#
+# Logging initialization
+#
+logging.basicConfig(level=logging.DEBUG)
+
 
 router = APIRouter()
 
@@ -12,55 +19,74 @@ router = APIRouter()
 # Example of Class based view
 @cbv(router)
 class Users:
-    session: Session = Depends(get_db)
 
     # API to get the list of user info
     @router.get("/users", response_model=PaginatedUserInfo)
     def list_users(self, limit: int = 10, offset: int = 0):
+        logging.info(f"list_users request")
 
-        users_list = get_all_users(self.session, limit, offset)
+        users_list = get_all_users(session, limit, offset)
         response = {"limit": limit, "offset": offset, "data": users_list}
+        logging.info(f"list_users get {len(users_list)} records")
 
         return response
+    
+# API endpoint to get info of a particular car
+@router.get("/users/{user_id}", response_model=PaginatedSongInfo)
+def get_user_song_list(user_id, limit: int = 10, offset: int = 0):
+    logging.info(f"get_user_song_list request")
 
-    # API endpoint to add a user info to the database
-    @router.post("/users")
-    def add_user(self, user_info: CreateAndUpdateUser):
+    songs_list_info = get_user_song_list_by_id(session, user_id)
+    response = {"limit": limit, "offset": offset, "data": songs_list_info}
+    logging.info(f"get_user_song_list get {len(songs_list_info)} records")
 
-        try:
-            user_info = create_user(self.session, user_info)
-            return user_info
-        except UserInfoException as cie:
-            raise HTTPException(**cie.__dict__)
-
-
-# API endpoint to get info of a particular user
-@router.get("/users/{user_id}", response_model=User)
-def get_user_info(user_id: int, session: Session = Depends(get_db)):
-
-    try:
-        user_info = get_user_info_by_id(session, user_id)
-        return user_info
-    except UserInfoException as cie:
-        raise HTTPException(**cie.__dict__)
+    return response
 
 
-# API to update a existing user info
-@router.put("/users/{user_id}", response_model=User)
-def update_user(user_id: int, new_info: CreateAndUpdateUser, session: Session = Depends(get_db)):
+@cbv(router)
+class Songs:    
 
-    try:
-        user_info = update_user_info(session, user_id, new_info)
-        return user_info
-    except UserInfoException as cie:
-        raise HTTPException(**cie.__dict__)
+    # API to get the list of user info
+    @router.get("/songs", response_model=PaginatedSongInfo)
+    def list_songs(self, limit: int = 10, offset: int = 0):
 
+        songs_list = get_all_songs(session, limit, offset)
+        response = {"limit": limit, "offset": offset, "data": songs_list}
 
-# API to delete a user info from the data base
-@router.delete("/users/{user_id}")
-def delete_user(user_id: int, session: Session = Depends(get_db)):
+        return response
+    
+@cbv(router)
+class Artists:    
 
-    try:
-        return delete_user_info(session, user_id)
-    except UserInfoException as cie:
-        raise HTTPException(**cie.__dict__)
+    # API to get the list of user info
+    @router.get("/artists", response_model=PaginatedArtistInfo)
+    def list_artists(self, limit: int = 10, offset: int = 0):
+
+        artists_list = get_all_artists(session, limit, offset)
+        response = {"limit": limit, "offset": offset, "data": artists_list}
+
+        return response
+    
+@cbv(router)
+class Ganres:    
+
+    # API to get the list of user info
+    @router.get("/ganres", response_model=PaginatedGanreInfo)
+    def list_ganres(self, limit: int = 10, offset: int = 0):
+
+        ganres_list = get_all_ganres(session, limit, offset)
+        response = {"limit": limit, "offset": offset, "data": ganres_list}
+
+        return response
+    
+@cbv(router)
+class Interations:    
+
+    # API to get the list of user info
+    @router.get("/interactions", response_model=PaginatedInteractionInfo)
+    def list_interactions(self, limit: int = 10, offset: int = 0):
+
+        interactions_list = get_all_interactions(session, limit, offset)
+        response = {"limit": limit, "offset": offset, "data": interactions_list}
+
+        return response

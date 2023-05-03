@@ -1,0 +1,36 @@
+CREATE TABLE Users (
+    USER_ID int NOT NULL,
+    UserName varchar(255) NOT NULL,
+    PRIMARY KEY (USER_ID)
+);
+
+CREATE TABLE Songs (
+    SONG_ID int NOT NULL,
+    Title varchar(255) NOT NULL,
+    ARTIST_ID int NOT NULL,
+    GANRE_ID int NOT NULL,
+    PRIMARY KEY (SONG_ID)
+);
+
+CREATE TABLE Artists (
+    ARTIST_ID int NOT NULL,
+    ArtistName varchar(255) NOT NULL,
+    GANRE_ID int NOT NULL,
+    PRIMARY KEY (ARTIST_ID)
+);
+
+CREATE TABLE Ganres (
+    GANRE_ID int NOT NULL,
+    GanreName varchar(255) NOT NULL,
+    PRIMARY KEY (GANRE_ID)
+);
+
+CREATE TABLE Interactions (
+    INTERACTION_ID int NOT NULL,
+    USER_ID int NOT NULL,
+    SONG_ID int NOT NULL,
+    Score int NOT NULL,
+    PRIMARY KEY (INTERACTION_ID)
+);
+
+ALTER TABLE Interactions ADD UNIQUE UNIQUE_INDEX (USER_ID, SONG_ID);

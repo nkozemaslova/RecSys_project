@@ -1,0 +1,41 @@
+INSERT INTO Users (USER_ID, UserName) VALUES (1, "Jonny");
+INSERT INTO Users (USER_ID, UserName) VALUES (2, "Ronald");
+INSERT INTO Users (USER_ID, UserName) VALUES (3, "Kelly");
+
+INSERT INTO Ganres (GANRE_ID, GanreName) VALUES (1, "Pop");
+INSERT INTO Ganres (GANRE_ID, GanreName) VALUES (2, "Hip Hop");
+INSERT INTO Ganres (GANRE_ID, GanreName) VALUES (3, "Soul");
+
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (1, "Ariana Grande", 1);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (2, "Lady Gaga", 1);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID)VALUES (3, "Billie Eilish", 1);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (4, "Kanye West", 2);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (5, "Drake", 2);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (6, "SZA", 3);
+INSERT INTO Artists (ARTIST_ID, ArtistName, GANRE_ID) VALUES (7, "Adele", 3);
+
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (1, "7 rings", 1, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (2, "Into You", 1, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (3, "positions", 1, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (4, "Poker Face", 2, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (5, "Just Dance", 2, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (6, "Happier Than Ever", 3, 1);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (7, "Flashing Lights", 4, 2);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (8, "Passionfruit", 5, 2);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (9, "Kill Bill", 6, 3);
+INSERT INTO Songs (SONG_ID, Title, ARTIST_ID, GANRE_ID) VALUES (10, "Set Fire to the Rain", 7, 3);
+
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (1, 1, 1, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (2, 1, 2, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (3, 1, 3, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (4, 1, 4, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (5, 1, 5, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (6, 1, 6, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (7, 2, 7, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (8, 2, 8, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (9, 2, 9, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (10, 2, 10, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (11, 2, 3, 10);
+INSERT INTO Interactions (INTERACTION_ID, USER_ID, SONG_ID, Score) VALUES (12, 3, 6, 10);
+
+COMMIT;

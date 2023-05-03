@@ -1,68 +1,54 @@
 # crud.py
 from typing import List
-from sqlalchemy.orm import Session
-from exceptions import CarInfoInfoAlreadyExistError, CarInfoNotFoundError
-from models import User
-from schema import CreateAndUpdateUser
+from exceptions import UserInfoInfoAlreadyExistError, UserInfoNotFoundError
+from model import Users, Songs, Artists, Ganres, Interactions
 
+import logging
 
-# Function to get list of car info
-def get_all_cars(session: Session, limit: int, offset: int) -> List[CarInfo]:
-    return session.query(User).offset(offset).limit(limit).all()
+#
+# Logging initialization
+#
+logging.basicConfig(level=logging.DEBUG)
 
+# Function to get list of user info
+def get_all_users(session, limit: int, offset: int):
+    logging.info(f"crud get_all_users requests")
+    return session.query(Users).offset(offset).limit(limit).all()
 
-# Function to  get info of a particular car
-def get_car_info_by_id(session: Session, _id: int) -> CarInfo:
-    user_info = session.query(User).get(_id)
+def get_user_song_list_by_id(session, _id: int):
+    user_song_list = session.query(Interactions, Users, Songs, Artists, Ganres) \
+        .join(Users, Users.USER_ID == Interactions.USER_ID) \
+        .join(Songs, Songs.SONG_ID == Interactions.SONG_ID) \
+        .join(Artists, Artists.ARTIST_ID == Songs.ARTIST_ID) \
+        .join(Ganres, Ganres.GANRE_ID == Songs.GANRE_ID) \
+        .with_entities(Users.UserName, Songs.Title, Artists.ArtistName, Ganres.GanreName) \
+        .filter(Users.USER_ID == _id).all()
+    logging.info(f"crud get_user_song_list_by_id requests")
 
-    if car_info is None:
-        raise CarInfoNotFoundError
+    return user_song_list
 
-    return car_info
+# Function to get list of user info
+def get_all_users(session, limit: int, offset: int) -> List[Users]:
+    return session.query(Users).offset(offset).limit(limit).all()
 
+def get_all_songs(session, limit: int, offset: int):
+    return session.query(Songs, Artists, Ganres) \
+        .join(Artists, Artists.ARTIST_ID == Songs.ARTIST_ID) \
+        .join(Ganres, Ganres.GANRE_ID == Songs.GANRE_ID) \
+        .with_entities(Songs.Title, Artists.ArtistName, Ganres.GanreName) \
+        .offset(offset).limit(limit).all()
 
-# Function to add a new car info to the database
-def create_car(session: Session, car_info: CreateAndUpdateCar) -> CarInfo:
-    car_details = session.query(CarInfo).filter(CarInfo.manufacturer == car_info.manufacturer, CarInfo.modelName == car_info.modelName).first()
-    if car_details is not None:
-        raise CarInfoInfoAlreadyExistError
+def get_all_artists(session, limit: int, offset: int) -> List[Artists]:
+    return session.query(Artists).offset(offset).limit(limit).all()
 
-    new_car_info = CarInfo(**car_info.dict())
-    session.add(new_car_info)
-    session.commit()
-    session.refresh(new_car_info)
-    return new_car_info
+def get_all_ganres(session, limit: int, offset: int) -> List[Ganres]:
+    return session.query(Ganres).offset(offset).limit(limit).all()
 
-
-# Function to update details of the car
-def update_car_info(session: Session, _id: int, info_update: CreateAndUpdateCar) -> CarInfo:
-    car_info = get_car_info_by_id(session, _id)
-
-    if car_info is None:
-        raise CarInfoNotFoundError
-
-    car_info.manufacturer = info_update.manufacturer
-    car_info.modelName = info_update.modelName
-    car_info.fuelType = info_update.fuelType
-    car_info.cc = info_update.cc
-    car_info.gearBox = info_update.gearBox
-    car_info.onRoadPrice = info_update.onRoadPrice
-    car_info.seatingCapacity = info_update.seatingCapacity
-
-    session.commit()
-    session.refresh(car_info)
-
-    return car_info
-
-
-# Function to delete a car info from the db
-def delete_car_info(session: Session, _id: int):
-    car_info = get_car_info_by_id(session, _id)
-
-    if car_info is None:
-        raise CarInfoNotFoundError
-
-    session.delete(car_info)
-    session.commit()
-
-    return
+def get_all_interactions(session, limit: int, offset: int):
+    return session.query(Interactions, Users, Songs, Artists, Ganres) \
+        .join(Users, Users.USER_ID == Interactions.USER_ID) \
+        .join(Songs, Songs.SONG_ID == Interactions.SONG_ID) \
+        .join(Artists, Artists.ARTIST_ID == Songs.ARTIST_ID) \
+        .join(Ganres, Ganres.GANRE_ID == Songs.GANRE_ID) \
+        .with_entities(Users.UserName, Songs.Title, Artists.ArtistName, Ganres.GanreName) \
+        .offset(offset).limit(limit).all()
